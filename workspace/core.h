@@ -1,37 +1,44 @@
 #pragma once
-
+#include <stdint.h>
 #include <string>
 #include <vector>
 #define ull unsigned long long
 using namespace std;
 class NoteEvent
 {
-  string name;
-  int prefix;
+  string prefix;
+  //mutable uint8_t prefix;
   string suffix;
   ull time;
   friend class NoteList;
-
+  
 public:
   NoteEvent(const string &str, const ull &t)
-      : name(str), time(t){};
+      : prefix(str), time(t){};
   void show() const;
+  uint8_t get_number() const;
 };
 class NoteList
 {
   vector<NoteEvent> list;
-  bool dtime_ready;
-  vector<ull> dtime;
-  double time_try(const ull &);
-  void calc_dtime();
-  bool bpm_ready;
-  double bpm;
-  double calc_bpm();
+  mutable bool dtime_ready;
+  mutable vector<ull> dtime;
+  ull time_try() const;
+  void calc_dtime() const;
+  mutable bool bpm_ready;
+  mutable double bpm;
+  double calc_bpm() const;
+  void save_midi(const string &filename, uint8_t numerator, uint8_t power2) const;
 
 public:
+  NoteList()
+  {
+    bpm = -1;
+    dtime_ready = bpm_ready = 0;
+  }
   void push_back(const NoteEvent &e) { list.push_back(e); }
-  double get_bpm();
-  double set_bpm();
+  double get_bpm() const;
+  void set_bpm(const double &b) { bpm = b; };
   void key_log(const string &s, const ull &t);
   void show() const;
   void clear();

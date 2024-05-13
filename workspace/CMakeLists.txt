@@ -19,12 +19,22 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        Jiemeng_DebugIO.hpp
+        Jiemeng_DebugIO.cpp
+        Jiemeng_IO.cpp 
+        Jiemeng_IO.hpp 
+        Jiemeng_LogIO.hpp
+        Midi_Writer.h
+        Midi_Writer.cpp
+        Binary_Writer.h 
+        
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(MeloNote
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        editor.h editor.cpp editor.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MeloNote APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

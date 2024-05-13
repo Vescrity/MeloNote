@@ -6,19 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>236</width>
-    <height>212</height>
+    <width>274</width>
+    <height>155</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>MeloNote</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>BPM: </string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignmentFlag::AlignVCenter">
+       <widget class="QTextBrowser" name="BPM_Display"/>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QPushButton" name="start_stop_button">
       <property name="text">
-       <string>PushButton</string>
+       <string>Start</string>
       </property>
      </widget>
     </item>
@@ -29,7 +43,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>236</width>
+     <width>274</width>
      <height>24</height>
     </rect>
    </property>

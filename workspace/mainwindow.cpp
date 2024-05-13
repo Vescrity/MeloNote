@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "core.h"
-#include <iostream>
+#include "editor.h"
+#include "Jiemeng_DebugIO.hpp"
 using namespace std;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -18,17 +19,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_start_stop_button_clicked()
 {
-    cout << "Called!" << endl;
+    // cout << "Called!" << endl;
     if (!is_Recording)
     {
         is_Recording = 1;
+        ui->start_stop_button->setText("Stop");
         current_list.clear();
         start_time = QDateTime::currentMSecsSinceEpoch();
     }
     else
     {
         is_Recording = 0;
+        ui->start_stop_button->setText("Start");
         current_list.show();
+        ui->BPM_Display->setText(QString::number(current_list.get_bpm()));
+        debug_lable("[Click]");
+        debug_puts("creating editor window.");
+        Editor *editor = new Editor(this);
+        editor->show();
     }
 }
 
