@@ -35,7 +35,7 @@ void MainWindow::on_start_stop_button_clicked()
         ui->BPM_Display->setText(QString::number(current_list.get_bpm()));
         debug_lable("[Click]");
         debug_puts("creating editor window.");
-        Editor *editor = new Editor(this);
+        Editor *editor = new Editor(this, current_list);
         editor->show();
     }
 }

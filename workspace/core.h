@@ -7,11 +7,11 @@ using namespace std;
 class NoteEvent
 {
   string prefix;
-  //mutable uint8_t prefix;
+  // mutable uint8_t prefix;
   string suffix;
   ull time;
   friend class NoteList;
-  
+
 public:
   NoteEvent(const string &str, const ull &t)
       : prefix(str), time(t){};
@@ -28,7 +28,6 @@ class NoteList
   mutable bool bpm_ready;
   mutable double bpm;
   double calc_bpm() const;
-  void save_midi(const string &filename, uint8_t numerator, uint8_t power2) const;
 
 public:
   NoteList()
@@ -36,9 +35,14 @@ public:
     bpm = -1;
     dtime_ready = bpm_ready = 0;
   }
+  void save_midi(const string &filename, uint8_t numerator, uint8_t power2) const;
   void push_back(const NoteEvent &e) { list.push_back(e); }
   double get_bpm() const;
-  void set_bpm(const double &b) { bpm = b; };
+  void set_bpm(const double &b)
+  {
+    bpm_ready = 1;
+    bpm = b;
+  };
   void key_log(const string &s, const ull &t);
   void show() const;
   void clear();

@@ -2,7 +2,7 @@
 std::vector<unsigned char> VLQ_encode(unsigned long ticks);
 void Midi_Writer::open(const string &filename)
 {
-  outfile = ofstream(filename, std::ios::binary | std::ios::app);
+  outfile = ofstream(filename, std::ios::binary);
   outfile.write("MThd", 4);
   writer.append(0, 1, 0, 2, 0, TPQN);
   writer.flush(outfile);
@@ -29,19 +29,31 @@ void Midi_Writer::set_bpm(const long double &bpm)
 
 void Midi_Writer::addnote(const uint8_t &notenumber, const uint32_t &tick)
 {
+  if (notenumber == 0xFF)
+  {
+    auto delays = VLQ_encode(tick);
+    for (const auto &i : delays)
+      writer.append(i);
+    writer.append(0x80, 0x01, 0x64); // TODO?
+    return;
+  }
   // NUM(69)=440Hz
   // NOTEON
   writer.append(0x00, 0x90, notenumber, 0x64); // Delay=0 NoteON, Channel0, Pitch, vel=0x64
   auto delays = VLQ_encode(tick);
 
   for (const auto &i : delays)
-  {
     writer.append(i);
-  }
   // NOTEOFF
   writer.append(0x80, notenumber, 0x64);
 }
-
+void Midi_Writer::close()
+{
+  writer.append(1);
+  writer.append(0xFF, 0x2F, 0x00);
+  writer.flush(outfile);
+  outfile.close();
+}
 Midi_Writer::Midi_Writer()
 {
   TPQN = 120;
@@ -53,21 +65,14 @@ std::vector<unsigned char> VLQ_encode(unsigned long ticks)
 {
   std::vector<unsigned char> encodedBytes;
   unsigned char buffer;
-  // Start with the lowest seven bits
-  buffer = ticks & 0x7F;
-  // Shift ticks to the right by seven bits to check for more data
-  ticks >>= 7;
-  // While there are still more data left, prepend bytes with continuation bit
-  while (ticks)
+  do
   {
-    // Temporarily store the next seven bits
-    buffer |= 0x80;                                    // Set the continuation bit
-    encodedBytes.insert(encodedBytes.begin(), buffer); // Prepend byte
-    buffer = ticks & 0x7F;                             // Store next seven bits value
-    ticks >>= 7;                                       // Move to the next seven bits
-  }
-  // Insert or prepend the last byte, which does not need continuation bit
-  encodedBytes.insert(encodedBytes.begin(), buffer);
+    buffer = ticks & 0x7F;
+    buffer |= 0x80;
+    encodedBytes.insert(encodedBytes.begin(), buffer);
+    ticks >>= 7;
+  } while (ticks);
+  encodedBytes.back() &= 0x7F;
   return encodedBytes;
 }
 

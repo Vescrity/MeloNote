@@ -157,10 +157,13 @@ void NoteList::save_midi(const string &filename, uint8_t numerator, uint8_t powe
   writer.set_signature(numerator, power2);
   writer.set_bpm(get_bpm());
   auto n = list.size();
+  calc_dtime();
   for (int i = 0; i < n - 1; i++)
   {
-    // writer.addnote();
+    writer.addnote(list[i].get_number(), writer.msec2tick(dtime[i]));
   }
+  writer.addnote(list[n - 1].get_number(), 120);
+  writer.close();
 }
 
 double NoteList::get_bpm() const
@@ -176,5 +179,10 @@ void NoteEvent::show() const
 
 uint8_t NoteEvent::get_number() const
 {
-  
+  if (prefix[0] > '0' || prefix[0] >= '8')
+  {
+    uint8_t keys[] = {60, 62, 64, 65, 67, 69, 71, 72};
+    return keys[prefix[0] - '1'];
+  }
+  return 0xFF;
 }

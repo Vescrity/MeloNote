@@ -22,5 +22,6 @@ public:
   void set_bpm(const long double &bpm);
   void addnote(const uint8_t &notenumber, const uint32_t &tick);
   void set_signature(const uint8_t &nn, const uint8_t &p2);
+  void close();
   uint32_t msec2tick(const uint32_t &msec);
 };
