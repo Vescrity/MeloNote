@@ -19,6 +19,9 @@
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="label">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;拍数/分钟。&lt;/p&gt;&lt;p&gt;改变此值只会影响 midi 的 bpm 信息而不会影响实际播放速度。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>bpm: </string>
         </property>
@@ -110,12 +113,13 @@
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string>摆设</string>
+     <string>关于</string>
     </property>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionMidi">
    <property name="text">
     <string>Midi</string>
