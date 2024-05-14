@@ -1,137 +1,12 @@
 #include "core.h"
-#include <algorithm>
 #include "Midi_Writer.h"
 #include "Jiemeng_LogIO.hpp"
 #include <stdint.h>
-using namespace std;
-void NoteList::calc_dtime() const
-{
-  if (dtime_ready)
-    return;
 
-  dtime.clear();
-  for (int i = 1; i < list.size(); i++)
-  {
-    auto dt = list[i].time - list[i - 1].time;
-    dtime.push_back(dt);
-  }
-  dtime_ready = 1;
-}
-double time2bpm(const ull &t, int as = 16)
-{
-  return 240000.0 / t / as;
-}
-ull TIME_1 = 10;
-ull TIME_2 = 25;
-ull TIME_3 = 50;
-ull NoteList::time_try() const
-{
-  calc_dtime();
-  auto stime = dtime;
-  sort(stime.begin(), stime.end());
-  unsigned head, tail;
-  head = 0;
-  tail = 0;
-  auto q_push = [&]
-  {
-    tail++;
-    if (tail > stime.size())
-      tail = stime.size();
-  };
-  auto q_pop = [&]
-  {
-    head++;
-    if (head > tail)
-      head = tail;
-  };
-  auto q_size = [&]
-  { return tail - head; };
-  auto q_empty = [&]
-  { return head == tail; };
-  // 队列加入第一元素
-  q_push();
-  auto n = stime.size();
-  while (tail < n)
-  {
-    bool b_1 = stime[tail] - stime[tail - 1] < TIME_1;
-    // bool b_2 = stime[tail] - stime[tail - 1] < TIME_2;
-    bool bh_1 = (head + 1 >= tail) ? 1 : stime[head + 1] - stime[head] < TIME_1;
-    bool b_3 = stime[tail] - stime[head] < TIME_3;
-    if (b_1)
-    {
-      // 新时长更贴近时更新掉队头并重新考察
-      if (!bh_1)
-      {
-        q_pop();
-        continue;
-      }
-      else
-      {
-        if (!b_3)
-        {
-        nob3:
-          if (q_size() >= 5) // 直接进行结算
-            break;
-          else // 清空队列后重新推入新元素
-          {
-            head = tail;
-            q_push();
-            continue;
-          }
-        }
-        // 正常入队
-        q_push();
-        continue;
-      }
-    }
-    else if (!b_3)
-    {
-      goto nob3;
-    }
-    else
-    {
-      q_push();
-      continue;
-    }
-  }
-  if (q_size() < 5)
-    return 0;
-  ull sum = 0;
-  for (int i = head; i < tail; i++)
-  {
-    sum += stime[i];
-  }
-  return sum / q_size();
-}
-double NoteList::calc_bpm() const
-{
-  // 若开头存在4个以上0则使用其计算bpm
-  unsigned cnt;
-  for (cnt = 0; cnt < list.size(); cnt++)
-  {
-    if (list[cnt].prefix != "0")
-      break;
-  }
-  if (cnt >= 4)
-  {
-    auto &t1 = list[cnt - 4].time;
-    auto &t2 = list[cnt - 1].time;
-    auto dt = t2 - t1;
-    bpm = 60000.0 / dt * 4.0;
-    bpm_ready = 1;
-    return bpm;
-  }
-  // 否则使用后续的操作猜测bpm
-  calc_dtime();
-  auto dt = time_try();
-  bpm = time2bpm(dt);
-  bpm_ready = 1;
-  return bpm;
-}
-void NoteList::key_log(const string &s, const ull &t)
-{
-  push_back(NoteEvent(s, t));
-}
+#include <math.h>
+using namespace std;
+
+void NoteList::key_log(const string &s, const ull &t) { push_back(NoteEvent(s, t)); }
 
 void NoteList::show() const
 {
@@ -172,17 +47,106 @@ double NoteList::get_bpm() const
     return bpm;
   return calc_bpm();
 }
-void NoteEvent::show() const
-{
-  dout << prefix << " " << time << "\n";
-}
+void NoteEvent::show() const { dout << prefix << " " << time << "\n"; }
 
 uint8_t NoteEvent::get_number() const
 {
   if (prefix[0] > '0' || prefix[0] >= '8')
   {
     uint8_t keys[] = {60, 62, 64, 65, 67, 69, 71, 72};
-    return keys[prefix[0] - '1'];
+    return keys[prefix[0] - '1'] + 12 * octave + sharp_flat;
   }
   return 0xFF;
+}
+string NoteEvent::html() const
+{
+  string rt;
+
+  rt +=
+      "<sup>"s +
+      (sharp_flat == 1
+           ? "#"
+       : sharp_flat == -1
+           ? "b"
+           : "&nbsp;") +
+      "</sup>";
+
+  rt += prefix;
+
+  if (octave > 0)
+    rt += "<sup>"s + to_string(octave) + "</sup>";
+  else if (octave < 0)
+    rt += "<sub>"s + to_string(-octave) + "</sub>";
+  else
+    rt += "<sup>&nbsp;</sup>";
+  return rt;
+}
+
+std::vector<unsigned> NoteList::get_nindex() const
+{
+  if (!nindex_ready)
+    calc_nindex();
+  return nindex;
+}
+
+std::string NoteList::html() const
+{
+  get_nindex();
+  string rt;
+  auto n = nindex.size();
+  for (size_t i = 0; i < n - 1; i++)
+  {
+    rt += list[i].html();
+    auto m = nindex[i + 1] - nindex[i] - 3;
+    for (unsigned j = 0; j < m; j++)
+      rt += "&nbsp;";
+  }
+  rt += list[n - 1].html();
+  return rt;
+}
+void NoteList::operate(const unsigned &st, const unsigned &ed, const string &pattern, const string &oper)
+{
+  unsigned i = 0;
+  while (nindex[i] < st)
+    i++;
+  for (; nindex[i] < ed; i++)
+  {
+    if (pattern != "*" && (pattern.find(list[i].prefix) == string::npos))
+      continue;
+    unsigned it = 0;
+    while (it < oper.length())
+    {
+      auto o = oper[it];
+      switch (o)
+      {
+      case 'b':
+        list[i].sharp_flat = -1;
+        break;
+      case '#':
+        list[i].sharp_flat = 1;
+        break;
+      case '0':
+        list[i].sharp_flat = 0;
+        break;
+      case '+':
+        list[i].octave++;
+        break;
+      case '-':
+        list[i].octave--;
+        break;
+      case 'r':
+        it++;
+        if (it >= oper.length())
+        {
+          throw std::invalid_argument("Invalid...");
+        }
+        list[i].prefix = oper[it];
+        break;
+      default:
+        throw std::invalid_argument("Invalid...");
+        break;
+      }
+      it++;
+    }
+  }
 }
