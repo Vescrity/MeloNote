@@ -32,7 +32,7 @@ void MainWindow::on_start_stop_button_clicked()
         is_Recording = 0;
         ui->start_stop_button->setText("Start");
         current_list.show();
-        ui->BPM_Display->setText(QString::number(current_list.get_bpm()));
+        ui->bpmNumber->display(current_list.get_bpm());
         debug_lable("[Click]");
         debug_puts("creating editor window.");
         Editor *editor = new Editor(this, current_list);

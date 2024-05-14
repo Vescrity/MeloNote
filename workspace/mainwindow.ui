@@ -7,25 +7,29 @@
     <x>0</x>
     <y>0</y>
     <width>274</width>
-    <height>155</height>
+    <height>171</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MeloNote</string>
+   <string>MeloNote - Recorder</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
+      <item alignment="Qt::AlignmentFlag::AlignLeft">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>BPM: </string>
         </property>
        </widget>
       </item>
-      <item alignment="Qt::AlignmentFlag::AlignVCenter">
-       <widget class="QTextBrowser" name="BPM_Display"/>
+      <item>
+       <widget class="QLCDNumber" name="bpmNumber">
+        <property name="frameShape">
+         <enum>QFrame::Shape::Panel</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

@@ -20,7 +20,7 @@ void Midi_Writer::set_bpm(const long double &bpm)
   writer.append((microsec_per_beat >> 16) & 0xFF);
   writer.append((microsec_per_beat >> 8) & 0xFF);
   writer.append((microsec_per_beat >> 0) & 0xFF);
-  writer.append(1); //?
+  writer.append(1);
   writer.append(0xFF, 0x2F, 0x00);
   writer.flush(outfile);
   // 开始接受第一音轨
