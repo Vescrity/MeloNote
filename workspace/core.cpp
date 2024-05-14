@@ -109,8 +109,12 @@ void NoteList::operate(const unsigned &st, const unsigned &ed, const string &pat
   unsigned i = 0;
   while (nindex[i] < st)
     i++;
-  for (; nindex[i] < ed; i++)
+  for (;; i++)
   {
+    if (i >= nindex.size())
+      break;
+    if (nindex[i] >= ed)
+      break;
     if (pattern != "*" && (pattern.find(list[i].prefix) == string::npos))
       continue;
     unsigned it = 0;

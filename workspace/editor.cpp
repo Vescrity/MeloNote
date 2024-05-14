@@ -1,6 +1,7 @@
 #include "editor.h"
 #include "ui_editor.h"
 #include <QFileDialog>
+#include "Jiemeng_DebugIO.hpp"
 Editor::Editor(QWidget *parent, const NoteList &l)
     : QMainWindow(parent), ui(new Ui::Editor), current_list(l)
 {
@@ -70,7 +71,7 @@ void Editor::on_executeButton_clicked()
     ui->statusBar->showMessage(tr("无效的指令"));
     return;
   }
-
+  dout<<"ok\n";
   editor_update();
   ui->statusBar->showMessage(tr("操作完成"));
 }
