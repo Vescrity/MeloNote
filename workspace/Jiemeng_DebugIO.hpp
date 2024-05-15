@@ -2,10 +2,8 @@
 #define JIEMENG_DEBUGIO
 
 #include "Jiemeng_IO.hpp"
-#include <nlohmann/json.hpp>
 #include <string>
 using namespace std;
-using json = nlohmann::json;
 extern bool Debug_Mode;
 class DoutStream
 {
@@ -27,12 +25,6 @@ public:
   {
     if (Debug_Mode)
       dprint(value);
-    return *this;
-  }
-  DoutStream &operator<<(const nlohmann::json &json)
-  {
-    if (Debug_Mode)
-      dprint(json.dump());
     return *this;
   }
 
