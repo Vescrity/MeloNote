@@ -194,7 +194,6 @@
      <string>导出</string>
     </property>
     <addaction name="actionMidi"/>
-    <addaction name="actionNote"/>
     <addaction name="actionText"/>
    </widget>
    <widget class="QMenu" name="aboutMenu">
