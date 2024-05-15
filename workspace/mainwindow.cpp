@@ -25,11 +25,13 @@ void MainWindow::on_start_stop_button_clicked()
         is_Recording = 1;
         ui->start_stop_button->setText("Stop");
         current_list.clear();
+        ui->statusbar->showMessage(tr("键盘录制已开始 按旋律来按键以记录"));
         start_time = QDateTime::currentMSecsSinceEpoch();
     }
     else
     {
         is_Recording = 0;
+        ui->statusbar->showMessage(tr("键盘录制已结束"));
         ui->start_stop_button->setText("Start");
         current_list.show();
         ui->bpmNumber->display(current_list.get_bpm());
@@ -44,7 +46,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (is_Recording && !event->isAutoRepeat())
     {                                                                        // 判定是否在记录，忽略长按时的自动重复
-        qint64 timestamp = QDateTime::currentMSecsSinceEpoch() - start_time; // 获取当前时间戳
+        qint64 timestamp = QDateTime::currentMSecsSinceEpoch() - start_time;
         current_list.key_log(QString(event->text().at(0)).toStdString(), timestamp);
     }
     QWidget::keyPressEvent(event); // 保证正常的按键事件处理

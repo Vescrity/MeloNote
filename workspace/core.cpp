@@ -20,9 +20,9 @@ void NoteList::show() const
 void NoteList::clear()
 {
   list.clear();
-  dtime_ready = 0;
   dtime.clear();
-  bpm_ready = 0;
+  nindex.clear();
+  dtime_ready = nindex_ready = bpm_ready = 0;
   bpm = 0;
 }
 void NoteList::save_midi(const string &filename, uint8_t numerator, uint8_t power2) const

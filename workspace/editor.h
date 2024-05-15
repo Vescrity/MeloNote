@@ -24,6 +24,20 @@ private slots:
     void on_executeButton_clicked();
     
 
+    void on_actionHelp_triggered();
+
+    void on_updateButton_clicked();
+
+    void on_x05Button_clicked();
+
+    void on_x2Button_clicked();
+
+    void on_actionText_triggered();
+
+    void on_actionQt_triggered();
+
+    void on_actionAboutThis_triggered();
+
 private:
     Ui::Editor *ui;
     NoteList current_list;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>395</width>
-    <height>362</height>
+    <width>401</width>
+    <height>354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;拍数/分钟。&lt;/p&gt;&lt;p&gt;改变此值只会影响 midi 的 bpm 信息而不会影响实际播放速度。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;拍数/分钟。&lt;/p&gt;&lt;p&gt;改变此值只会影响 midi 的 bpm 信息而不会影响音符间的真实间隔时长(即始终保持与录制时一致)。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>bpm: </string>
@@ -28,14 +28,58 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="bpmSpinBox">
-        <property name="maximum">
-         <double>9999.000000000000000</double>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QDoubleSpinBox" name="bpmSpinBox">
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>9999.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="x05Button">
+          <property name="text">
+           <string>x0.5</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="x2Button">
+          <property name="text">
+           <string>x2</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="updateButton">
+          <property name="text">
+           <string>更新</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;改变此值只影响 Midi 的文件信息。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>拍号: </string>
         </property>
@@ -91,27 +135,39 @@
        </layout>
       </item>
       <item row="2" column="1">
-       <widget class="QTextBrowser" name="editorBrowser"/>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="patternEdit"/>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="commandEdit"/>
+       <widget class="QTextBrowser" name="editorBrowser">
+        <property name="font">
+         <font>
+          <family>Monospace</family>
+         </font>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_3">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;音符筛选规则。&lt;br/&gt;例如输入 367 会筛选选中范围中的 3 6 7&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>筛选: </string>
         </property>
        </widget>
       </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="patternEdit"/>
+      </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_4">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;对筛选的内容执行的操作&lt;br/&gt;升/降/还原: # b 0&lt;br/&gt;提升/降低八度: + -&lt;br/&gt;替换: r[替换后的音符]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>指令: </string>
         </property>
        </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="commandEdit"/>
       </item>
      </layout>
     </item>
@@ -129,25 +185,34 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>395</width>
+     <width>401</width>
      <height>24</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="exportMenu">
     <property name="title">
      <string>导出</string>
     </property>
     <addaction name="actionMidi"/>
-    <addaction name="actionText"/>
     <addaction name="actionNote"/>
+    <addaction name="actionText"/>
    </widget>
-   <widget class="QMenu" name="menu_2">
+   <widget class="QMenu" name="aboutMenu">
     <property name="title">
      <string>关于</string>
     </property>
+    <addaction name="actionQt"/>
+    <addaction name="actionAboutThis"/>
    </widget>
-   <addaction name="menu"/>
-   <addaction name="menu_2"/>
+   <widget class="QMenu" name="helpMenu">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="actionHelp"/>
+   </widget>
+   <addaction name="exportMenu"/>
+   <addaction name="helpMenu"/>
+   <addaction name="aboutMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionMidi">
@@ -157,12 +222,27 @@
   </action>
   <action name="actionText">
    <property name="text">
-    <string>Text</string>
+    <string>HTML</string>
    </property>
   </action>
   <action name="actionNote">
    <property name="text">
     <string>Note</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>使用说明</string>
+   </property>
+  </action>
+  <action name="actionQt">
+   <property name="text">
+    <string>关于 Qt</string>
+   </property>
+  </action>
+  <action name="actionAboutThis">
+   <property name="text">
+    <string>关于本应用</string>
    </property>
   </action>
  </widget>

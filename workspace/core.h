@@ -50,6 +50,7 @@ public:
   {
     bpm_ready = 1;
     nindex_ready = 0;
+    nindex.clear();
     bpm = b;
   };
   void key_log(const string &s, const ull &t);

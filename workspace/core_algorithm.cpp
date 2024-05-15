@@ -7,7 +7,7 @@ void NoteList::calc_nindex() const
 {
   if (nindex_ready)
     return;
-  long double _16time = 60000.0 / bpm / 4;
+  long double _16time = 60000.0 / get_bpm() / 4;
   calc_dtime();
   auto n = dtime.size();
   nindex.push_back(1);
@@ -27,6 +27,7 @@ void NoteList::calc_dtime() const
     return;
   dtime.clear();
   nindex_ready = 0;
+  nindex.clear();
   for (int i = 1; i < list.size(); i++)
   {
     auto dt = list[i].time - list[i - 1].time;
