@@ -20,7 +20,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;拍数/分钟。&lt;/p&gt;&lt;p&gt;改变此值只会影响 midi 的 bpm 信息而不会影响音符间的真实间隔时长(即始终保持与录制时一致)。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;拍数/分钟。&lt;/p&gt;&lt;p&gt;初始值为自动推断，仅供参考。若为 100 可能是推断失败。&lt;/p&gt;&lt;p&gt;改变此值只会影响 midi 的 bpm 信息而不会影响音符间的真实间隔时长(即始终保持与录制时一致)。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>bpm: </string>
