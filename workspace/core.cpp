@@ -6,7 +6,7 @@
 #include <math.h>
 using namespace std;
 
-void NoteList::key_log(const string &s, const ull &t) { push_back(NoteEvent(s, t)); }
+void NoteList::key_log(const string &s, const uint32_t &t) { push_back(NoteEvent(s, t)); }
 
 void NoteList::show() const
 {
@@ -25,19 +25,28 @@ void NoteList::clear()
   dtime_ready = nindex_ready = bpm_ready = 0;
   bpm = 0;
 }
-void NoteList::save_midi(const string &filename, uint8_t numerator, uint8_t power2) const
+void NoteList::save_midi(const string &filename, uint8_t numerator, uint8_t power2, bool quan, int8_t qp2) const
 {
   Midi_Writer writer;
   writer.open(filename);
   writer.set_signature(numerator, power2);
   writer.set_bpm(get_bpm());
   auto n = list.size();
+  long double _time = 240000.0 / get_bpm() / (1 << qp2);
   calc_dtime();
   for (int i = 0; i < n - 1; i++)
   {
-    writer.addnote(list[i].get_number(), writer.msec2tick(dtime[i]));
+    auto ti = dtime[i];
+    if (quan)
+    {
+      ti = round(ti / _time);
+      if (ti < 1)
+        ti = 1;
+      ti *= _time;
+    }
+    writer.addnote(list[i].get_number(), writer.msec2tick(ti));
   }
-  writer.addnote(list[n - 1].get_number(), 120);
+  writer.addnote(list[n - 1].get_number(), 0xF0);
   writer.close();
 }
 

@@ -13,8 +13,7 @@ void NoteList::calc_nindex() const
   nindex.push_back(1);
   for (int i = 1; i <= n; i++)
   {
-    ull len = round(dtime[i - 1] * 1.0 / _16time);
-    dout << len << "\n";
+    uint32_t len = round(dtime[i - 1] * 1.0 / _16time);
     nindex.push_back((len >= 2 ? len : 1) + 2 + nindex[i - 1]);
   }
 
@@ -35,14 +34,14 @@ void NoteList::calc_dtime() const
   }
   dtime_ready = 1;
 }
-double time2bpm(const ull &t, int as = 16)
+double time2bpm(const uint32_t &t, int as = 16)
 {
   return 240000.0 / t / as;
 }
-ull TIME_1 = 10;
-ull TIME_2 = 25;
-ull TIME_3 = 50;
-ull NoteList::time_try() const
+uint32_t TIME_1 = 10;
+uint32_t TIME_2 = 25;
+uint32_t TIME_3 = 50;
+uint32_t NoteList::time_try() const
 {
   calc_dtime();
   auto stime = dtime;
@@ -114,7 +113,7 @@ ull NoteList::time_try() const
   }
   if (q_size() < 5)
     return 0;
-  ull sum = 0;
+  uint32_t sum = 0;
   for (int i = head; i < tail; i++)
   {
     sum += stime[i];

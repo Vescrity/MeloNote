@@ -33,10 +33,16 @@ void Editor::editor_update()
 }
 void Editor::on_actionMidi_triggered()
 {
-  QString fname = QFileDialog::getSaveFileName(this, tr("保存文件"), QDir::currentPath(), tr("MIDI 文件(*.mid)"));
+  QString fname = QFileDialog::getSaveFileName(
+      this, tr("保存文件"),
+      QDir::currentPath(),
+      tr("MIDI 文件(*.mid)"));
   if (!fname.isEmpty())
   {
-    current_list.save_midi(fname.toStdString(), numerator, power2);
+    current_list.save_midi(
+        fname.toStdString(), numerator, power2,
+        ui->quantizeCheckBox->isChecked(),
+        ui->quantizeComboBox->currentIndex() + 2);
     ui->statusBar->showMessage(tr("文件已导出"));
   }
   else
@@ -47,7 +53,10 @@ void Editor::on_actionMidi_triggered()
 
 void Editor::on_actionText_triggered()
 {
-  QString fname = QFileDialog::getSaveFileName(this, tr("保存文件"), QDir::currentPath(), tr("HTML 文件(*.htm)"));
+  QString fname = QFileDialog::getSaveFileName(
+      this, tr("保存文件"),
+      QDir::currentPath(),
+      tr("HTML 文件(*.htm)"));
   if (!fname.isEmpty())
   {
     auto s = ui->editorBrowser->toHtml();
@@ -121,6 +130,3 @@ void Editor::on_x2Button_clicked()
   current_list.set_bpm(ui->bpmSpinBox->value() * 2.0);
   editor_update();
 }
-
-
-

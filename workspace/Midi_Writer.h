@@ -10,7 +10,8 @@ class Midi_Writer
   uint8_t TPQN;
   uint8_t numerator;
   uint8_t power2;
-  uint32_t microsec_per_beat;
+  uint tick_time;
+  // uint32_t microsec_per_beat;
   std::ofstream outfile;
   Binary_Writer writer;
 

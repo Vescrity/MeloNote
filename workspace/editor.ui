@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
-    <height>354</height>
+    <width>430</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -134,7 +134,7 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QTextBrowser" name="editorBrowser">
         <property name="font">
          <font>
@@ -143,7 +143,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_3">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;音符筛选规则。&lt;br/&gt;例如输入 367 会筛选选中范围中的 3 6 7&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -153,10 +153,10 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QLineEdit" name="patternEdit"/>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="label_4">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;对筛选的内容执行的操作&lt;br/&gt;升/降/还原: # b 0&lt;br/&gt;提升/降低八度: + -&lt;br/&gt;替换: r[替换后的音符]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -166,8 +166,72 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QLineEdit" name="commandEdit"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;辅助功能，仅对单个音符长度进行量化。可能存在误差，仍需在 DAW 中进一步处理。&lt;/p&gt;&lt;p&gt;仅在导出 Midi 时生效&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>量化: </string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="quantizeCheckBox">
+          <property name="text">
+           <string>启用</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>对齐至: </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="quantizeComboBox">
+            <property name="currentIndex">
+             <number>2</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>1/4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1/8</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1/16</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1/32</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1/64</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -185,7 +249,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>401</width>
+     <width>430</width>
      <height>24</height>
     </rect>
    </property>
@@ -209,7 +273,14 @@
     </property>
     <addaction name="actionHelp"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>导入</string>
+    </property>
+    <addaction name="actionImportNote"/>
+   </widget>
    <addaction name="exportMenu"/>
+   <addaction name="menu"/>
    <addaction name="helpMenu"/>
    <addaction name="aboutMenu"/>
   </widget>
@@ -242,6 +313,11 @@
   <action name="actionAboutThis">
    <property name="text">
     <string>关于本应用</string>
+   </property>
+  </action>
+  <action name="actionImportNote">
+   <property name="text">
+    <string>Note</string>
    </property>
   </action>
  </widget>

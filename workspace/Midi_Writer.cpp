@@ -9,7 +9,8 @@ void Midi_Writer::open(const string &filename)
 }
 void Midi_Writer::set_bpm(const long double &bpm)
 {
-  microsec_per_beat = 60000000ul / bpm;
+  uint32_t microsec_per_beat = 60000000ul / bpm;
+  tick_time = microsec_per_beat / TPQN;
   // TODO: 写入文件
   outfile.write("MTrk", 4);
   writer.append(0);
@@ -56,7 +57,7 @@ void Midi_Writer::close()
 }
 Midi_Writer::Midi_Writer()
 {
-  TPQN = 120;
+  TPQN = 0xF0;
   numerator = 4;
   power2 = 2;
 }
@@ -78,7 +79,6 @@ std::vector<unsigned char> VLQ_encode(unsigned long ticks)
 
 uint32_t Midi_Writer::msec2tick(const uint32_t &msec)
 {
-  auto tick_time = microsec_per_beat / TPQN;
   return msec * 1000 / tick_time;
 }
 
