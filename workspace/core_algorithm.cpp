@@ -134,7 +134,7 @@ double NoteList::calc_bpm() const
     auto &t1 = list[cnt - 4].time;
     auto &t2 = list[cnt - 1].time;
     auto dt = t2 - t1;
-    bpm = 60000.0 / dt * 4.0;
+    bpm = 60000.0 / dt * 3.0;
     bpm_ready = 1;
     return bpm;
   }
